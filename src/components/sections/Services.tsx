@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Music4, Clapperboard, ArrowUpRight } from 'lucide-react';
+import { Music4, Clapperboard, FolderOpen, ArrowUpRight } from 'lucide-react';
 import { SectionHeading } from '../ui/SectionHeading';
 import { cn } from '../../utils/cn';
 import { sinceNow } from '../../utils/format';
@@ -27,6 +27,16 @@ const CARDS = [
         icon: Clapperboard,
         accent: 'green' as const,
         blurb: 'Everything on the array, with hardware-free direct play to browser and TV apps.',
+    },
+    {
+        key: 'filebrowser',
+        name: 'File Manager',
+        role: 'NAS Storage',
+        host: 'probablysecure.tech/files',
+        url: 'https://probablysecure.tech/files/',
+        icon: FolderOpen,
+        accent: 'blue' as const,
+        blurb: 'Upload and manage files on the NAS.',
     },
 ];
 
