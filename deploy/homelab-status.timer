@@ -1,0 +1,11 @@
+[Unit]
+Description=Refresh homelab telemetry every 20s
+
+[Timer]
+OnBootSec=30s
+OnUnitActiveSec=20s
+AccuracySec=1s
+Unit=homelab-status.service
+
+[Install]
+WantedBy=timers.target

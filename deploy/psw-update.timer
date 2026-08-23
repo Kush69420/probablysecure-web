@@ -1,0 +1,12 @@
+[Unit]
+Description=Check GHCR for a new probablysecure-web image
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=3min
+# Spread the polls so they do not all land on the minute boundary.
+RandomizedDelaySec=30s
+Unit=psw-update.service
+
+[Install]
+WantedBy=timers.target

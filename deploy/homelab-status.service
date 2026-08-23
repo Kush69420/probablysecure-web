@@ -1,0 +1,9 @@
+[Unit]
+Description=Collect homelab telemetry for the public status page
+After=docker.service
+Wants=docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/homelab-status.py
+TimeoutStartSec=30

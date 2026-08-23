@@ -1,0 +1,9 @@
+[Unit]
+Description=Pull and deploy the latest probablysecure-web image
+After=docker.service network-online.target
+Wants=docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/psw-update.sh
+TimeoutStartSec=300

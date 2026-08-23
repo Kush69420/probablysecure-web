@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind utilities;
+@tailwind components;
+
+@layer base {
+  html { scroll-behavior: smooth; }
+  body {
+    @apply bg-cyber-dark text-neutral-200 overflow-x-hidden antialiased;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+  ::selection { @apply bg-cyber-blue/30 text-white; }
+}
+
+@layer utilities {
+  /* Faint blueprint grid; the radial mask keeps it from fighting the content. */
+  .grid-bg {
+    background-image:
+      linear-gradient(rgba(0, 229, 255, 0.055) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 229, 255, 0.055) 1px, transparent 1px);
+    background-size: 44px 44px;
+    -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
+  }
+  .noise::after {
+    content: '';
+    position: absolute; inset: 0; pointer-events: none; opacity: 0.025;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .text-glow { text-shadow: 0 0 18px currentColor; }
+}
+
+/* Thin dark scrollbar so the chrome doesn't break the theme on desktop. */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: #0a0a0a; }
+::-webkit-scrollbar-thumb { background: #1f1f1f; border-radius: 6px; }
+::-webkit-scrollbar-thumb:hover { background: #2b2b2b; }

@@ -1,0 +1,16 @@
+services:
+  probablysecure-web:
+    image: ghcr.io/kush69420/probablysecure-web:latest
+    container_name: probablysecure-web
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8081:80"
+    volumes:
+      # Telemetry is written on the host by homelab-status.timer and served
+      # from inside the image's docroot.
+      - /srv/dev-disk-by-uuid-4ffa1336-6f12-4ff5-9c34-4838e4d865c3/blue/appdata/probablysecure-web/api:/usr/share/nginx/html/api:ro
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
