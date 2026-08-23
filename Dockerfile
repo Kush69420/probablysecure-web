@@ -6,6 +6,10 @@ COPY package.json package-lock.json ./
 RUN npm ci
 
 COPY . .
+
+# Stamped into the footer so the live site reports its own commit.
+ARG BUILD_SHA=dev
+ENV BUILD_SHA=$BUILD_SHA
 RUN npm run build
 
 # ---- serve ----
