@@ -35,7 +35,7 @@ export const Homelab = ({ status, error, history }: Props) => {
     return (
         <section id="homelab" className="px-5 py-16">
             <div className="mx-auto max-w-6xl">
-                <SectionHeading num="02." title="HOMELAB MONITOR" />
+                <SectionHeading num="05." title="HOMELAB MONITOR" />
 
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}

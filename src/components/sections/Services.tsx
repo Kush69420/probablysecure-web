@@ -48,7 +48,7 @@ const ACCENT = {
 export const Services = ({ status }: Props) => (
     <section id="services" className="px-5 py-16">
         <div className="mx-auto max-w-6xl">
-            <SectionHeading num="01." title="SERVICES" />
+            <SectionHeading num="04." title="SERVICES" />
 
             <div className="grid gap-5 md:grid-cols-2">
                 {CARDS.map((card, i) => {
