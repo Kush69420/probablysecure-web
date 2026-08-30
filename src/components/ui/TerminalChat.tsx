@@ -91,7 +91,6 @@ export const TerminalChat = () => {
                     onChange={(e) => setInput(e.target.value)}
                     className="flex-1 bg-transparent border-none outline-none text-gray-200 font-mono placeholder-gray-600 focus:ring-0"
                     placeholder="Type a command..."
-                    autoFocus
                 />
             </form>
         </TerminalWindow>
