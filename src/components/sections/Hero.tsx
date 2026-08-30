@@ -77,7 +77,7 @@ export const Hero = () => {
                 >
                     <div className="flex items-center gap-2">
                         <Terminal className="w-4 h-4" />
-                        <span>Research-Driven</span>
+                        <span>Building Secure Infrastructure</span>
                     </div>
                     <div className="flex items-center gap-2">
                         <span className="w-4 h-4 border-2 border-current rounded-sm flex items-center justify-center text-[10px] font-bold">42</span>

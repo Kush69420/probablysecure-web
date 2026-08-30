@@ -1,4 +1,5 @@
 import { Navbar } from './components/layout/Navbar';
+import { SectionNav } from './components/ui/SectionNav';
 import { Footer } from './components/layout/Footer';
 import { Hero } from './components/sections/Hero';
 import { About } from './components/sections/About';
@@ -21,6 +22,7 @@ export default function App() {
                 aria-hidden
             />
             <Navbar />
+            <SectionNav />
             <main>
                 <Hero />
                 <About />
