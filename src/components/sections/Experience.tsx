@@ -4,12 +4,22 @@ import { Briefcase, Calendar } from 'lucide-react';
 
 const experiences = [
     {
+        title: "Machine Learning Research Intern",
+        company: "Université Polytechnique Hauts-de-France",
+        period: "Jun 2026 - Present",
+        description: [
+            "Built a Python/Pandas pipeline integrating **7 EV-charging datasets into 261K+ hourly observations**.",
+            "Developed a **two-stage XGBoost forecasting model** using chronological holdout evaluation and time-series cross-validation. Campus visit: France."
+        ],
+        tech: ["Python", "Pandas", "XGBoost", "Time-Series Cross-Validation"]
+    },
+    {
         title: "Cybersecurity Research Intern",
         company: "Indian Institute of Technology (IIT), Patna",
         period: "May 2026 - Jul 2026",
         description: [
-            "Designed and implemented **PQC-DLST-MQTT**, a broker-blind post-quantum security framework for MQTT using ML-KEM, ML-DSA, AES-GCM, and SHAKE-256.",
-            "Developed a **deterministic multi-publisher nonce architecture** and out-of-band key management protocol to achieve quantum-resistant end-to-end secure IoT communication."
+            "Implemented the **PQC-DLST-MQTT prototype** using ML-KEM, ML-DSA, AES-GCM, and SHAKE-256.",
+            "Used **deterministic multi-publisher nonces** and out-of-band key management."
         ],
         tech: ["ML-KEM", "ML-DSA", "AES-GCM", "MQTT", "Post-Quantum Crypto"]
     },
@@ -18,10 +28,10 @@ const experiences = [
         company: "Indian Institute of Information Technology (IIIT), Nagpur",
         period: "Nov 2025 - Feb 2026",
         description: [
-            "Researching **AI-assisted optimization** of next-generation (6G) network infrastructure, focusing on energy-efficient, resilient, and scalable communication systems while minimizing carbon footprint across distributed network components.",
-            "Analyzing **Deep Reinforcement Learning (DRL, PPO)** and game-theoretic models for secure and efficient workload orchestration across edge, cloud, and endpoint systems."
+            "Built **Gymnasium environments and PPO policies** for network resource allocation.",
+            "Modeled **finite-buffer packet loss and energy/carbon trade-offs** using Python and Stable-Baselines3."
         ],
-        tech: ["Python", "TensorFlow", "DRL / PPO", "6G Networks"]
+        tech: ["Python", "Gymnasium", "PPO", "Stable-Baselines3"]
     }
 ];
 

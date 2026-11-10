@@ -26,7 +26,7 @@ export const Hero = () => {
                     className="mb-6"
                 >
                     <GlitchText
-                        text="KUSH AGRAWAL"
+                        text="Kush Agrawal"
                         as="h1"
                         className="text-4xl md:text-7xl font-bold font-mono tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-cyber-blue via-white to-cyber-purple drop-shadow-[0_0_15px_rgba(0,229,255,0.5)]"
                     />
@@ -38,10 +38,10 @@ export const Hero = () => {
                     transition={{ duration: 0.5, delay: 0.4 }}
                     className="text-xl md:text-2xl text-gray-300 mb-8 max-w-2xl mx-auto font-light leading-relaxed"
                 >
-                    Cybersecurity & Systems-Focused Engineer specializing in
-                    <span className="text-cyber-blue font-mono"> Linux</span>,
-                    <span className="text-cyber-purple font-mono"> IoT</span>, and
-                    <span className="text-cyber-green font-mono"> Network</span> infrastructure.
+                    Systems-focused engineer building for
+                    <span className="text-cyber-blue font-mono"> reliability</span>,
+                    <span className="text-cyber-purple font-mono"> automation</span>, and
+                    <span className="text-cyber-green font-mono"> secure infrastructure</span>.
                 </motion.p>
 
                 <motion.div
@@ -60,8 +60,9 @@ export const Hero = () => {
                     </a>
 
                     <a
-                        href="https://drive.google.com/file/d/1tnFw0vQluZiwyRSO9QtF6XuPog3h8wAv/view?usp=sharing"
+                        href="/resume"
                         target="_blank"
+                        rel="noopener noreferrer"
                         className="px-8 py-3 border border-gray-700 text-gray-300 font-mono rounded hover:border-gray-500 hover:text-white transition-all duration-300 flex items-center gap-2"
                     >
                         <Download className="w-4 h-4" />
@@ -73,15 +74,15 @@ export const Hero = () => {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 1, delay: 1 }}
-                    className="mt-20 flex justify-center gap-8 text-gray-500 font-mono text-sm"
+                    className="mt-20 flex flex-wrap justify-center gap-6 text-gray-500 font-mono text-sm"
                 >
                     <div className="flex items-center gap-2">
                         <Terminal className="w-4 h-4" />
-                        <span>Building Secure Infrastructure</span>
+                        <span>Linux · Cloud · Platform Engineering</span>
                     </div>
                     <div className="flex items-center gap-2">
-                        <span className="w-4 h-4 border-2 border-current rounded-sm flex items-center justify-center text-[10px] font-bold">42</span>
-                        <span>Systems Hardening</span>
+                        <ArrowRight className="w-4 h-4" />
+                        <a href="/homelab" className="text-cyber-blue hover:underline">Explore the homelab</a>
                     </div>
                 </motion.div>
             </div>

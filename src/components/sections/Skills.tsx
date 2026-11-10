@@ -1,163 +1,151 @@
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
+import { Activity, Cloud, Code2, Database, Network, ShieldCheck } from 'lucide-react';
 import { SectionHeading } from '../ui/SectionHeading';
-import { useState } from 'react';
 import { cn } from '../../utils/cn';
 
 const skillsData = [
-    { category: "Systems", value: 95, skills: ["Linux (Arch/Debian)", "Proxmox VE", "Docker/K8s", "Bash/Shell"] },
-    { category: "Security", value: 90, skills: ["Penetration Testing", "Cryptography", "Network Forensics", "Burp Suite"] },
-    { category: "Research", value: 85, skills: ["Deep Learning (TF/PyTorch)", "6G Networks", "DQL", "DRL PPO"] },
-    { category: "Dev", value: 88, skills: ["Python", "TypeScript/React", "C/C++", "Rust", "Solidity"] },
-    { category: "Network", value: 92, skills: ["Wireshark", "Cisco Packet Tracer", "VPNs (WireGuard)", "SDN"] },
-    { category: "Protocols", value: 88, skills: ["TCP/IP", "BGP", "OSPF", "eBPF", "XDP", "QUIC"] },
+    { category: 'Programming', icon: Code2, skills: ['Python', 'Bash', 'TypeScript', 'SQL', 'C++', 'Data structures and algorithms'] },
+    { category: 'Systems & networking', icon: Network, skills: ['Linux / Debian', 'systemd', 'Proxmox VE', 'TCP/IP', 'DNS', 'HTTP/HTTPS', 'SSH', 'Nginx', 'Cloudflare Tunnel'] },
+    { category: 'Cloud & platform', icon: Cloud, skills: ['Docker', 'Docker Compose', 'Kubernetes', 'AWS', 'GitHub Actions', 'Terraform', 'Ansible'] },
+    { category: 'Observability', icon: Activity, skills: ['Prometheus', 'Grafana', 'Monit', 'collectd', 'Monitoring and alerting'] },
+    { category: 'Reliability', icon: ShieldCheck, skills: ['SLIs / SLOs', 'Error budgets', 'Incident response', 'Root cause analysis'] },
+    { category: 'Data & storage', icon: Database, skills: ['PostgreSQL', 'MySQL', 'SMB/CIFS', 'rsync', 'Btrfs RAID1'] },
 ];
 
-const RadarChart = ({ data, hoveredIndex }: { data: typeof skillsData; hoveredIndex: number | null }) => {
-    const size = 300;
-    const radius = size / 2;
-    const angleStep = (Math.PI * 2) / data.length;
-
-    const getPoint = (value: number, index: number) => {
-        const angle = index * angleStep - Math.PI / 2;
-        const distance = (value / 100) * (radius - 40); // 40px padding
-        return {
-            x: radius + distance * Math.cos(angle),
-            y: radius + distance * Math.sin(angle)
-        };
-    };
-
-    const points = data.map((d, i) => getPoint(d.value, i));
-    const pathData = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x},${p.y}`).join(' ') + ' Z';
-
-    return (
-        <div className="relative w-[300px] h-[300px] mx-auto">
-            <svg width={size} height={size} className="overflow-visible">
-                {/* Grid Circles */}
-                {[20, 40, 60, 80, 100].map((r, i) => (
-                    <circle
-                        key={i}
-                        cx={radius}
-                        cy={radius}
-                        r={(r / 100) * (radius - 40)}
-                        fill="none"
-                        stroke="#39ff14"
-                        strokeOpacity={0.1}
-                    />
-                ))}
-
-                {/* Axes */}
-                {data.map((_, i) => {
-                    const angle = i * angleStep - Math.PI / 2;
-                    const x = radius + (radius - 40) * Math.cos(angle);
-                    const y = radius + (radius - 40) * Math.sin(angle);
-                    return <line key={i} x1={radius} y1={radius} x2={x} y2={y} stroke="#39ff14" strokeOpacity={0.2} />;
-                })}
-
-                {/* Data Path */}
-                <motion.path
-                    d={pathData}
-                    fill="rgba(0, 229, 255, 0.2)"
-                    stroke="#00E5FF"
-                    strokeWidth={2}
-                    initial={{ pathLength: 0, opacity: 0 }}
-                    whileInView={{ pathLength: 1, opacity: 1 }}
-                    transition={{ duration: 1.5, ease: "easeInOut" }}
-                />
-
-                {/* Points */}
-                {points.map((p, i) => (
-                    <motion.circle
-                        key={i}
-                        cx={p.x}
-                        cy={p.y}
-                        r={hoveredIndex === i ? 6 : 4}
-                        fill={hoveredIndex === i ? "#fff" : "#39FF14"}
-                        initial={{ scale: 0 }}
-                        animate={{ scale: hoveredIndex === i ? 1.5 : 1 }}
-                        whileInView={{ scale: 1 }}
-                        transition={{ duration: 0.2 }}
-                    />
-                ))}
-
-                {/* Labels */}
-                {data.map((d, i) => {
-                    const angle = i * angleStep - Math.PI / 2;
-                    const x = radius + (radius - 20) * Math.cos(angle);
-                    const y = radius + (radius - 20) * Math.sin(angle);
-                    return (
-                        <text
-                            key={i}
-                            x={x}
-                            y={y}
-                            textAnchor="middle"
-                            dominantBaseline="middle"
-                            fill={hoveredIndex === i ? "#00E5FF" : "#fff"}
-                            fontSize="12"
-                            fontFamily="monospace"
-                            className={cn("uppercase tracking-wider transition-colors duration-300", hoveredIndex === i && "font-bold")}
-                        >
-                            {d.category}
-                        </text>
-                    );
-                })}
-            </svg>
-        </div>
-    );
-};
+// Identical neighbors on either side let the track re-center without a visible jump.
+const slides = [...skillsData, ...skillsData, ...skillsData];
 
 export const Skills = () => {
-    const [hoveredSkill, setHoveredSkill] = useState<number | null>(null);
+    const trackRef = useRef<HTMLDivElement>(null);
+    const currentIndex = useRef(skillsData.length);
+    const [activeCategory, setActiveCategory] = useState(0);
+    const [reducedMotion, setReducedMotion] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+
+    useEffect(() => {
+        const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
+        const onChange = () => setReducedMotion(preference.matches);
+        preference.addEventListener('change', onChange);
+        return () => preference.removeEventListener('change', onChange);
+    }, []);
+
+    const centerCard = useCallback((index: number, behavior: ScrollBehavior = 'auto') => {
+        const track = trackRef.current;
+        const card = track?.children[index];
+        if (!track || !(card instanceof HTMLElement)) return;
+        currentIndex.current = index;
+        track.scrollTo({ left: card.offsetLeft - (track.clientWidth - card.offsetWidth) / 2, behavior });
+    }, []);
+
+    useLayoutEffect(() => {
+        const track = trackRef.current;
+        if (!track) return;
+        let settleTimer: number | undefined;
+        const onScroll = () => {
+            const card = track.firstElementChild;
+            if (!(card instanceof HTMLElement)) return;
+            const step = card.offsetWidth + parseFloat(getComputedStyle(track).columnGap);
+            const index = Math.max(0, Math.min(slides.length - 1, Math.round((track.scrollLeft + (track.clientWidth - card.offsetWidth) / 2) / step)));
+            currentIndex.current = index;
+            setActiveCategory(index % skillsData.length);
+            clearTimeout(settleTimer);
+            settleTimer = window.setTimeout(() => {
+                if (index < skillsData.length || index >= skillsData.length * 2) {
+                    centerCard(skillsData.length + index % skillsData.length, 'instant');
+                }
+            }, 150);
+        };
+
+        centerCard(skillsData.length, 'instant');
+        const observer = new ResizeObserver(() => centerCard(currentIndex.current, 'instant'));
+        observer.observe(track);
+        track.addEventListener('scroll', onScroll, { passive: true });
+
+        return () => {
+            clearTimeout(settleTimer);
+            observer.disconnect();
+            track.removeEventListener('scroll', onScroll);
+        };
+    }, [centerCard]);
 
     return (
-        <section id="skills" className="min-h-screen py-20 relative bg-[#050505] flex items-center snap-start snap-always">
-            <div className="container mx-auto px-4">
-                <div className="max-w-4xl mx-auto">
-                    <SectionHeading num="06." title="SKILL MATRIX" />
-                </div>
+        <section id="skills" className="py-20 relative bg-[#050505]">
+            <div className="max-w-4xl mx-auto px-4">
+                <SectionHeading num="05." title="TECHNICAL SKILLS" />
+                <p className="text-gray-400 leading-relaxed mb-8">The tools and practices I use to build, operate, and recover systems.</p>
 
-                <div className="flex flex-col lg:flex-row items-center justify-center gap-16 max-w-6xl mx-auto">
-                    <div className="w-full lg:w-1/3 flex justify-center scale-75 md:scale-100 origin-center">
-                        <RadarChart data={skillsData} hoveredIndex={hoveredSkill} />
-                    </div>
+                <div
+                    id="skills-carousel"
+                    ref={trackRef}
+                    role="region"
+                    aria-label="Technical skill categories"
+                    aria-roledescription="carousel"
+                    tabIndex={0}
+                    onKeyDown={event => {
+                        if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+                            event.preventDefault();
+                            centerCard(currentIndex.current + (event.key === 'ArrowLeft' ? -1 : 1));
+                        } else if (event.key === 'Home' || event.key === 'End') {
+                            event.preventDefault();
+                            centerCard(event.key === 'Home' ? skillsData.length : skillsData.length * 2 - 1);
+                        }
+                    }}
+                    className="skills-carousel relative flex items-stretch gap-6 overflow-x-auto overscroll-x-contain snap-x snap-mandatory motion-safe:scroll-smooth py-4 rounded-xl"
+                >
+                    {slides.map(({ category, skills, icon: Icon }, index) => {
+                        const active = index % skillsData.length === activeCategory;
+                        const side = (index % skillsData.length - activeCategory + skillsData.length) % skillsData.length > skillsData.length / 2 ? -1 : 1;
 
-                    <div className="w-full lg:w-2/3 grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {skillsData.map((category, idx) => (
-                            <motion.div
-                                key={idx}
-                                initial={{ opacity: 0, scale: 0.9 }}
-                                whileInView={{ opacity: 1, scale: 1 }}
-                                transition={{ duration: 0.3, delay: idx * 0.1 }}
-                                className={cn(
-                                    "bg-[#0c0c0c] border p-4 rounded transition-all duration-300",
-                                    hoveredSkill === idx ? "border-cyber-green/50 bg-[#111] translate-x-2" : "border-gray-800"
-                                )}
-                                onMouseEnter={() => setHoveredSkill(idx)}
-                                onMouseLeave={() => setHoveredSkill(null)}
+                        return (
+                            <article
+                                key={`${category}-${index}`}
+                                role="group"
+                                aria-roledescription="slide"
+                                aria-label={`${category}, ${index % skillsData.length + 1} of ${skillsData.length}`}
+                                aria-hidden={index < skillsData.length || index >= skillsData.length * 2 ? true : undefined}
+                                className="min-w-0 shrink-0 basis-[78%] sm:basis-[64%] snap-center"
                             >
-                                <div className="flex justify-between items-center mb-3">
-                                    <h3 className={cn("font-mono font-bold text-lg transition-colors", hoveredSkill === idx ? "text-cyber-green" : "text-white")}>
-                                        {category.category}
-                                    </h3>
-                                    <div className="h-1.5 w-24 bg-gray-800 rounded-full overflow-hidden">
-                                        <motion.div
-                                            className={cn("h-full", hoveredSkill === idx ? "bg-cyber-blue" : "bg-cyber-green")}
-                                            initial={{ width: 0 }}
-                                            whileInView={{ width: `${category.value}%` }}
-                                            transition={{ duration: 1, delay: 0.5 }}
-                                        />
+                                <motion.div
+                                    initial={false}
+                                    animate={{
+                                        scale: reducedMotion || active ? 1 : 0.88,
+                                        rotateY: reducedMotion || active ? 0 : side * -8,
+                                        y: reducedMotion || active ? 0 : 12,
+                                        opacity: active ? 1 : 0.45,
+                                    }}
+                                    transition={reducedMotion ? { duration: 0 } : { type: 'spring', stiffness: 260, damping: 28, opacity: { duration: 0.25 } }}
+                                    style={{ transformPerspective: 1200 }}
+                                    className={cn(
+                                        'flex h-full min-h-[20rem] flex-col rounded-xl border bg-[#0c0c0c] p-6 sm:p-8',
+                                        active ? 'border-cyber-blue/50' : 'border-gray-800',
+                                    )}
+                                >
+                                    <div className="flex items-start justify-between gap-4 border-b border-cyber-blue/20 pb-5 mb-2">
+                                        <h3 className="text-2xl font-semibold text-white leading-tight">{category}</h3>
+                                        <Icon className="h-6 w-6 shrink-0 text-cyber-blue" strokeWidth={1.5} aria-hidden="true" />
                                     </div>
-                                </div>
-                                <div className="flex flex-wrap gap-2">
-                                    {category.skills.map((skill, sIdx) => (
-                                        <span key={sIdx} className="px-2 py-1 text-xs font-mono text-gray-400 bg-gray-900 border border-gray-800 rounded">
-                                            {skill}
-                                        </span>
-                                    ))}
-                                </div>
-                            </motion.div>
-                        ))}
-                    </div>
+                                    <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-6">
+                                        {skills.map((skill, skillIndex) => (
+                                            <motion.li
+                                                key={skill}
+                                                initial={false}
+                                                animate={{ x: reducedMotion || active ? 0 : side * 12, opacity: active ? 1 : 0.65 }}
+                                                transition={{
+                                                    duration: reducedMotion ? 0 : 0.3,
+                                                    delay: reducedMotion || !active ? 0 : Math.min(skillIndex * 0.035, 0.2),
+                                                    ease: [0.16, 1, 0.3, 1],
+                                                }}
+                                                className="border-b border-neutral-800/70 py-2 sm:py-3 text-sm sm:text-base font-medium leading-relaxed text-neutral-200"
+                                            >{skill}</motion.li>
+                                        ))}
+                                    </ul>
+                                </motion.div>
+                            </article>
+                        );
+                    })}
                 </div>
+
+                <p aria-live="polite" aria-atomic="true" className="sr-only">{skillsData[activeCategory].category}, slide {activeCategory + 1} of {skillsData.length}</p>
             </div>
         </section>
     );

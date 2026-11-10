@@ -36,8 +36,8 @@ export const Contact = () => {
                     <div className="w-full md:w-1/2">
                         <GlitchText text="INITIALIZE_CONTACT" className="text-3xl md:text-5xl font-bold text-white mb-6" />
                         <p className="text-gray-400 leading-relaxed mb-6 font-light">
-                            Interested in collaborating on secure infrastructure, AI research, or blockchain systems?
-                            Open a secure channel below.
+                            Interested in collaborating on reliable infrastructure, platform engineering,
+                            security, or machine learning research? Get in touch below.
                         </p>
                         <div className="space-y-4">
                             <a href="mailto:kushagr250@gmail.com" className="flex items-center gap-3 text-gray-300 hover:text-cyber-blue transition-colors group">

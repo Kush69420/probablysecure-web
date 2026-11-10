@@ -12,10 +12,10 @@ export const About = () => {
     const [mode, setMode] = useState<'profile' | 'interactive'>('interactive');
 
     const points = [
-        "Exploring the intersection of **Cybersecurity**, **IoT**, and **Secure Systems**.",
-        "Specializing in **Linux System Administration** and **Infrastructure Hardening**.",
-        "Researching **AI-Assisted Optimization** for Next-Gen Networks (6G).",
-        "Building resilient, self-hosted systems in my **Homelab**."
+        "Operating **nine containerized services** across a NAS and Raspberry Pi.",
+        "Automating **power-loss recovery**, monitoring, and backup-restoration checks.",
+        "Building reproducible **ML pipelines** and researching secure networked systems.",
+        "Studying **Data Science and Artificial Intelligence** at IIIT Naya Raipur."
     ];
 
     return (
@@ -31,13 +31,15 @@ export const About = () => {
                         >
                             <SectionHeading num="01." title="ABOUT ME" />
                             <p className="text-gray-400 leading-relaxed mb-6 font-light">
-                                I am a research-driven engineer with a passion for securing complex systems.
-                                My work focuses on the practical application of cryptographic primitives and
-                                machine learning to solve real-world infrastructure challenges.
+                                I build and operate Linux infrastructure with a focus on reliability,
+                                recovery automation, and secure access. My work spans a self-hosted
+                                production environment, container delivery pipelines, and security research.
                             </p>
                             <p className="text-gray-400 leading-relaxed font-light mb-8">
-                                When I'm not coding, I'm likely auditing kernel modules, configuring my
-                                Proxmox cluster, or reading whitepapers on Quantum Key Distribution.
+                                B.Tech in Data Science and Artificial Intelligence at the International
+                                Institute of Information Technology, Naya Raipur (Aug 2024–Aug 2028).
+                                CGPA: 8.22/10. My research includes EV-charging forecasting,
+                                post-quantum IoT security, and network resource allocation.
                             </p>
 
                             <div className="flex gap-4">

@@ -1,8 +1,8 @@
 # probablysecure.tech
 
-Landing page and live homelab monitor for a self-hosted NAS, published through a
-Cloudflare named tunnel. React 19 + Vite + TypeScript + Tailwind, styled to match
-[the portfolio](https://github.com/Kush69420/Portfolio).
+Portfolio and public homelab showcase for Kush Agrawal, published through a
+Cloudflare named tunnel. React 19 + Vite + TypeScript + Tailwind, retaining the
+existing terminal-inspired visual style.
 
 ## How a change reaches production
 
@@ -29,6 +29,35 @@ npm run dev
 The monitor reads `/api/status.json`. In dev that path 404s and the UI shows its
 "telemetry unreachable" state, which is the correct fallback. To work against
 real data, proxy it in `vite.config.ts` or drop a sample at `public/api/status.json`.
+
+## Public routes
+
+| Route | Content |
+|---|---|
+| `/` | Portfolio: education, research experience, projects, technical skills, and contact |
+| `/homelab` | Infrastructure overview, recovery automation, operational lessons, and live telemetry |
+| `/resume` | Original updated resume, served directly as `application/pdf` with inline disposition |
+
+`public/resume.pdf` is an unchanged copy of the supplied `Resume(SRE).pdf`.
+To update the resume later, replace that asset and update the related portfolio
+copy. Vite development/preview middleware and the production Nginx configuration
+both support `/resume`; keep those routes in sync.
+
+The three existing projects remain, with their descriptions updated to match the
+resume; SENTINEL is added alongside them. The homelab page links to the original
+Navidrome, Jellyfin, and File Manager endpoints; authentication remains enforced
+by those services. Internal addresses, credentials, and share paths are not
+published. Only that page polls `/api/status.json`; local telemetry is unavailable
+unless a collector or sample is configured.
+
+Technical skills use an infinitely looping horizontal carousel: one centered
+category with previews of its neighbors, native touch/trackpad scrolling, and
+keyboard Left/Right/Home/End navigation when focused. Ruled skill rows replace
+pill badges; spring-based depth/tilt and a short row stagger emphasize the centered
+category. Reduced-motion preferences disable spatial motion and smooth scrolling,
+including when the preference changes while the page is open. Duplicate loop
+slides are hidden from screen readers. No autoplay, arrow buttons, or visible
+slide counters.
 
 ## Telemetry
 

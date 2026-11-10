@@ -39,12 +39,12 @@ export const ProjectCard: React.FC<ProjectProps> = ({ project, index }) => {
                     </div>
                     <div className="flex gap-3">
                         {project.links.github && (
-                            <a href={project.links.github} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
+                            <a href={project.links.github} target="_blank" rel="noopener noreferrer" aria-label={`View source for ${project.title}`} className="text-gray-400 hover:text-white transition-colors">
                                 <GitBranch className="w-5 h-5" />
                             </a>
                         )}
                         {project.links.demo && (
-                            <a href={project.links.demo} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
+                            <a href={project.links.demo} target={project.links.demo.startsWith('/') ? undefined : '_blank'} rel="noopener noreferrer" aria-label={`Explore ${project.title}`} className="text-gray-400 hover:text-white transition-colors">
                                 <ExternalLink className="w-5 h-5" />
                             </a>
                         )}
